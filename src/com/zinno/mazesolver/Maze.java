@@ -279,12 +279,7 @@ public class Maze {
 		// Colors the pixels
 		for(int y = yBegin; y < yTotal + yBegin; y++) {
 			for(int x = xBegin; x < xTotal + xBegin; x++) {
-				try {
-					image.setRGB(x, y, Color.RED.getRGB());
-				} catch (ArrayIndexOutOfBoundsException ex) {
-					System.out.println(image.getWidth() + ", " + x);
-					System.out.println(image.getHeight() + ", " + y);
-				}
+				image.setRGB(x, y, Color.RED.getRGB());
 			}
 		}
 	}
