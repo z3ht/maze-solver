@@ -294,7 +294,7 @@ public class Maze {
 		File file = new File("Maze.png");
 		if(!(file.exists())) {
 			try {
-				URL url = new URL("https://openclipart.org/image/2400px/svg_to_png/246662/simplemaze.png");
+				URL url = new URL("http://i.imgur.com/2cBRXPp.png");
 				ImageIO.write(ImageIO.read(url), "png", file);
 			} catch(IOException ex) {
 				ex.printStackTrace();
