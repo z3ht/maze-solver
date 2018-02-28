@@ -4,11 +4,12 @@ import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -223,10 +224,10 @@ public class Maze {
 		return new Pair<>(start, end);
 	}
 	
-	public void printSolution() throws IOException {
+	public void printSolution(String name) throws IOException {
 		if(this.getSolution() == null)
 			this.generateSolution();
-		File file = new File("MazeSolution.png");
+		File file = new File(name + ".png");
 		if(!(file.exists())) {
 			file.createNewFile();
 		}
@@ -238,6 +239,19 @@ public class Maze {
 			}
 		}
 		ImageIO.write(solutionImage, "png", file);
+		successMessage();
+	}
+	
+	private void successMessage() {
+		JFrame window = new JFrame("Maze Solver");
+		JLabel label = new JLabel("<html><font family='times'><font size=10><font color='green'>Success</font><br>" +
+				"<font size=5>The maze has been solved</font></html>", SwingConstants.CENTER);
+		label.setBorder(new EmptyBorder(10,10,10,10));
+		window.add(label);
+		window.pack();
+		window.setLocationRelativeTo(null);
+		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		window.setVisible(true);
 	}
 	
 	private void colorCord(int xCord, int yCord, BufferedImage image) {
@@ -291,21 +305,30 @@ public class Maze {
 	public boolean[][] getSolution() { return this.solution; }
 	
 	public static void main(String[] args) {
-		File file = new File("Maze.png");
-		if(!(file.exists())) {
+		File dir = new File(".").getAbsoluteFile();
+		for(File file : dir.listFiles()) {
+			if(!(file.getName().endsWith(".png")))
+				continue;
+			
 			try {
-				URL url = new URL("http://i.imgur.com/2cBRXPp.png");
-				ImageIO.write(ImageIO.read(url), "png", file);
-			} catch(IOException ex) {
-				ex.printStackTrace();
-			}
+				Maze maze = new Maze(file);
+				maze.printSolution(file.getName() + " (with solution)");
+				return;
+			} catch(IOException ex) {}
+			
 		}
-		
-		try {
-			Maze maze = new Maze(file);
-			maze.printSolution();
-		} catch(IOException ex) {
-			ex.printStackTrace();
-		}
+		errorMessage();
+	}
+	
+	private static void errorMessage() {
+		JFrame window = new JFrame("Maze Solver");
+		JLabel label = new JLabel("<html><font family='times'><font size=10><font color='red'>Maze Not Found</font><br>" +
+				"<font size=5>Try visiting mazegenerator.net and download a .png maze file</font></html>", SwingConstants.CENTER);
+		label.setBorder(new EmptyBorder(10,10,10,10));
+		window.add(label);
+		window.pack();
+		window.setLocationRelativeTo(null);
+		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		window.setVisible(true);
 	}
 }
